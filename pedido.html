@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Realiza tu pedido de impresión y serigrafía con RealPrint.">
+    <meta name="keywords" content="pedido, impresión, serigrafía, personalización">
+    <script src="https://kit.fontawesome.com/29d1c617bb.js" crossorigin="anonymous"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon.ico">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Realizar Pedido - RealPrint</title>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <img src="img/RealPrint logo.png" alt="RealPrint Logo" height="28">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Inicio</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Servicios</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="servicios.html">Todos los Servicios</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="serigrafia.html">Serigrafía</a></li>
+                            <li><a class="dropdown-item" href="rotulacion.html">Rotulación</a></li>
+                            <li><a class="dropdown-item" href="dtf.html">DTF</a></li>
+                            <li><a class="dropdown-item" href="sublimacion.html">Sublimación</a></li>
+                            <li><a class="dropdown-item" href="impresion-digital.html">Impresión Digital</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="sobreNosotros.html">Sobre Nosotros</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contacto.html">Contacto</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="faq.html">FAQ</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="termycond.html">Términos y Condiciones</a>
+                    </li>
+                </ul>
+                <div class="d-flex">
+                    <a href="login.html" class="btn btn-outline-light me-2">Iniciar Sesión</a>
+                    <a href="registro.html" class="btn btn-light">Registrarse</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero-section py-5">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h1 class="display-4 fw-bold text-white">Realizar Pedido</h1>
+                    <p class="lead text-white">Personaliza y solicita tus productos de impresión y serigrafía.</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Order Form Section -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h2 class="mb-4">Formulario de Pedido</h2>
+                            <form id="orderForm">
+                                <!-- Información Personal -->
+                                <div class="mb-4">
+                                    <h3 class="h5 mb-3">Información Personal</h3>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="nombre" class="form-label">Nombre</label>
+                                            <input type="text" class="form-control" id="nombre" required>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="apellidos" class="form-label">Apellidos</label>
+                                            <input type="text" class="form-control" id="apellidos" required>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="email" class="form-label">Email</label>
+                                            <input type="email" class="form-control" id="email" required>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="telefono" class="form-label">Teléfono</label>
+                                            <input type="tel" class="form-control" id="telefono" required>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Detalles del Pedido -->
+                                <div class="mb-4">
+                                    <h3 class="h5 mb-3">Detalles del Pedido</h3>
+                                    <div class="form-group">
+                                        <label for="tipo_servicio">Tipo de Servicio</label>
+                                        <select class="form-control" id="tipo_servicio" name="tipo_servicio" required>
+                                            <option value="">Seleccione un servicio</option>
+                                            <option value="serigrafia">Serigrafía</option>
+                                            <option value="rotulacion">Rotulación</option>
+                                            <option value="dtf">DTF (Direct to Film)</option>
+                                            <option value="sublimacion">Sublimación</option>
+                                            <option value="impresion_digital">Impresión Digital</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="descripcion" class="form-label">Descripción del Pedido</label>
+                                        <textarea class="form-control" id="descripcion" rows="4" required></textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="cantidad" class="form-label">Cantidad</label>
+                                        <input type="number" class="form-control" id="cantidad" min="1" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="fechaEntrega" class="form-label">Fecha de Entrega Deseada</label>
+                                        <input type="date" class="form-control" id="fechaEntrega" required>
+                                    </div>
+                                </div>
+
+                                <!-- Archivos -->
+                                <div class="mb-4">
+                                    <h3 class="h5 mb-3">Archivos</h3>
+                                    <div class="mb-3">
+                                        <label for="archivos" class="form-label">Subir Archivos de Diseño</label>
+                                        <input type="file" class="form-control" id="archivos" multiple>
+                                        <div class="form-text">Formatos aceptados: JPG, PNG, PDF, AI, PSD</div>
+                                    </div>
+                                </div>
+
+                                <!-- Términos y Condiciones -->
+                                <div class="mb-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="terminos" required>
+                                        <label class="form-check-label" for="terminos">
+                                            Acepto los <a href="termycond.html">términos y condiciones</a> y la <a href="privacidad.html">política de privacidad</a>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="d-grid gap-2">
+                                    <button type="submit" class="btn btn-primary">Enviar Pedido</button>
+                                    <button type="button" class="btn btn-outline-primary" onclick="window.location.href='index.html'">Volver al Inicio</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5>RealPrint</h5>
+                    <p>Tu socio en impresión y serigrafía de calidad.</p>
+                </div>
+                <div class="col-md-4">
+                    <h5>Enlaces Rápidos</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="servicios.html" class="text-white">Servicios</a></li>
+                        <li><a href="sobreNosotros.html" class="text-white">Sobre Nosotros</a></li>
+                        <li><a href="contacto.html" class="text-white">Contacto</a></li>
+                        <li><a href="faq.html" class="text-white">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5>Contacto</h5>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-phone"></i> +34 123 456 789</li>
+                        <li><i class="fas fa-envelope"></i> info@realprint.com</li>
+                        <li><i class="fas fa-map-marker-alt"></i> Calle Ejemplo, 123</li>
+                    </ul>
+                </div>
+            </div>
+            <hr>
+            <div class="text-center">
+                <p>&copy; 2024 RealPrint. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

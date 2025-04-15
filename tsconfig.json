@@ -1,0 +1,67 @@
+{
+    "compilerOptions": {
+        "target": "ES2020",
+        "module": "ESNext",
+        "strict": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "moduleResolution": "node",
+        "resolveJsonModule": true,
+        "isolatedModules": true,
+        "noEmit": true,
+        "jsx": "preserve",
+        "lib": ["DOM", "DOM.Iterable", "ESNext"],
+        "baseUrl": ".",
+        "paths": {
+            "@/*": ["*"]
+        },
+        "typeRoots": [
+            "./node_modules/@types",
+            "./types"
+        ],
+        "allowJs": true,
+        "checkJs": true,
+        "noImplicitAny": true,
+        "strictNullChecks": true,
+        "strictFunctionTypes": true,
+        "strictBindCallApply": true,
+        "strictPropertyInitialization": true,
+        "noImplicitThis": true,
+        "alwaysStrict": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noImplicitReturns": true,
+        "noFallthroughCasesInSwitch": true,
+        "allowSyntheticDefaultImports": true,
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "inlineSourceMap": true,
+        "inlineSources": true,
+        "outDir": "./dist",
+        "rootDir": ".",
+        "removeComments": true,
+        "noEmitOnError": true,
+        "preserveConstEnums": true,
+        "declaration": true,
+        "declarationMap": true
+    },
+    "include": [
+        "js/**/*.ts",
+        "js/**/*.js",
+        "admin/js/**/*.ts",
+        "admin/js/**/*.js",
+        "cliente/js/**/*.ts",
+        "cliente/js/**/*.js",
+        "jefe/js/**/*.ts",
+        "jefe/js/**/*.js",
+        "operario/js/**/*.ts",
+        "operario/js/**/*.js"
+    ],
+    "exclude": [
+        "node_modules",
+        "dist",
+        "**/*.test.ts",
+        "**/*.spec.ts"
+    ]
+} 

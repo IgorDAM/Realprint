@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RealPrint - Calculadora de Optimización</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+        }
+        .header {
+            background: linear-gradient(135deg, #3a0ca3 0%, #4361ee 100%);
+            color: white;
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-bottom: 25px;
+        }
+        .card-header {
+            background-color: #4361ee;
+            color: white;
+            border-radius: 10px 10px 0 0 !important;
+            font-weight: 600;
+        }
+        .btn-primary {
+            background-color: #4361ee;
+            border-color: #3a0ca3;
+        }
+        .btn-primary:hover {
+            background-color: #3a0ca3;
+            border-color: #3a0ca3;
+        }
+        .design-row {
+            background-color: #f1f3f9;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        #visualizacion {
+            border: 2px solid #ccc;
+            background-color: #fff;
+        }
+        .result-table th {
+            background-color: #e9ecef;
+        }
+        .saved-config {
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .saved-config:hover {
+            background-color: #e9ecef;
+        }
+        #costoTotal {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #4361ee;
+        }
+        .form-label {
+            font-weight: 500;
+        }
+        .legend-item {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            margin-right: 5px;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1><i class="fas fa-print me-2"></i>RealPrint</h1>
+                    <p class="lead mb-0">Calculadora de Optimización de Impresiones DTF</p>
+                </div>
+                <div class="col-md-4 text-end">
+                    <button class="btn btn-light" id="btnExportarPDF">
+                        <i class="fas fa-file-pdf me-2"></i>Exportar PDF
+                    </button>
+                    <button class="btn btn-light ms-2" id="btnEnviarEmail">
+                        <i class="fas fa-envelope me-2"></i>Enviar Email
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <!-- Formulario de Diseños -->
+            <div class="col-lg-5">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-pencil-ruler me-2"></i>Información de Diseños
+                    </div>
+                    <div class="card-body">
+                        <form id="calculadoraForm">
+                            <div id="disenosContainer">
+                                <!-- Aquí se generarán dinámicamente los diseños -->
+                                <div class="design-row" data-index="0">
+                                    <div class="row mb-2">
+                                        <div class="col-md-9">
+                                            <label class="form-label">Diseño #1</label>
+                                        </div>
+                                        <div class="col-md-3 text-end">
+                                            <button type="button" class="btn btn-sm btn-outline-danger btn-eliminar-diseno" disabled>
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="row g-2 mb-2">
+                                        <div class="col-md-6">
+                                            <label class="form-label">Nombre</label>
+                                            <input type="text" class="form-control nombre-diseno" placeholder="Ej: Logo">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Color</label>
+                                            <input type="color" class="form-control color-diseno" value="#4361ee">
+                                        </div>
+                                    </div>
+                                    <div class="row g-2">
+                                        <div class="col-md-4">
+                                            <label class="form-label">Ancho (cm)</label>
+                                            <input type="number" step="0.1" min="0.1" class="form-control ancho-diseno" required>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label">Alto (cm)</label>
+                                            <input type="number" step="0.1" min="0.1" class="form-control alto-diseno" required>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label">Cantidad</label>
+                                            <input type="number" min="1" class="form-control cantidad-diseno" value="1" required>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="d-grid gap-2 mt-3">
+                                <button type="button" class="btn btn-outline-primary" id="btnAnadirDiseno">
+                                    <i class="fas fa-plus me-2"></i>Añadir Diseño
+                                </button>
+                            </div>
+
+                            <hr>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Margen entre diseños (cm)</label>
+                                    <input type="number" class="form-control" id="margenDisenos" min="0.2" max="2" step="0.1" value="0.5">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Forzar orientación</label>
+                                    <select class="form-select" id="forzarOrientacion">
+                                        <option value="auto">Automático (óptimo)</option>
+                                        <option value="original">Original (sin rotar)</option>
+                                        <option value="rotado">Rotado (90°)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Material</label>
+                                <select class="form-select" id="tipoMaterial">
+                                    <option value="estandar" data-precio="5">Estándar (5€/hoja)</option>
+                                    <option value="premium" data-precio="8">Premium (8€/hoja)</option>
+                                    <option value="especial" data-precio="12">Especial (12€/hoja)</option>
+                                </select>
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-calculator me-2"></i>Calcular Distribución
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Guardado de Configuraciones -->
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-save me-2"></i>Configuraciones Guardadas
+                    </div>
+                    <div class="card-body">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" id="nombreConfiguracion" placeholder="Nombre de la configuración">
+                            <button class="btn btn-outline-secondary" type="button" id="btnGuardarConfiguracion">Guardar</button>
+                        </div>
+                        <div id="configuracionesGuardadas" class="list-group">
+                            <!-- Aquí se mostrarán las configuraciones guardadas -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Visualización y Resultados -->
+            <div class="col-lg-7">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-eye me-2"></i>Visualización
+                    </div>
+                    <div class="card-body text-center">
+                        <canvas id="visualizacion" width="580" height="880" style="max-width: 100%; height: auto;"></canvas>
+                        <div id="leyendaVisualizacion" class="mt-3 text-start">
+                            <!-- Aquí irá la leyenda de colores -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-table me-2"></i>Resultados del Cálculo
+                    </div>
+                    <div class="card-body">
+                        <div id="sinResultados" class="alert alert-info">
+                            Añade diseños y calcula su distribución para ver los resultados.
+                        </div>
+                        <div id="conResultados" style="display: none;">
+                            <table class="table table-striped result-table">
+                                <thead>
+                                    <tr>
+                                        <th>Diseño</th>
+                                        <th>Dimensiones</th>
+                                        <th>Distribución</th>
+                                        <th>Cantidad</th>
+                                        <th>Hojas</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="resultadosTabla">
+                                    <!-- Aquí se mostrarán los resultados -->
+                                </tbody>
+                            </table>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p><strong>Dimensiones de hoja:</strong> 58cm x 88cm</p>
+                                    <p><strong>Margen aplicado:</strong> <span id="resultadoMargen">0.5</span>cm</p>
+                                    <p><strong>Material seleccionado:</strong> <span id="resultadoMaterial">Estándar</span></p>
+                                </div>
+                                <div class="col-md-6 text-end">
+                                    <p><strong>Total Hojas:</strong> <span id="totalHojas">0</span></p>
+                                    <p><strong>Precio por hoja:</strong> <span id="precioPorHoja">0</span>€</p>
+                                    <div id="costoTotal">0.00€</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Exportar PDF -->
+    <div class="modal fade" id="exportarPDFModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Exportar PDF</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Se generará un PDF con los resultados del cálculo.</p>
+                    <div class="mb-3">
+                        <label class="form-label">Nombre del cliente</label>
+                        <input type="text" class="form-control" id="nombreClientePDF">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Correo electrónico (opcional)</label>
+                        <input type="email" class="form-control" id="emailClientePDF">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="btnGenerarPDF">Generar PDF</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Enviar Email -->
+    <div class="modal fade" id="enviarEmailModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Enviar Presupuesto por Email</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Nombre del cliente</label>
+                        <input type="text" class="form-control" id="nombreClienteEmail">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Correo electrónico</label>
+                        <input type="email" class="form-control" id="emailClienteEmail" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Mensaje (opcional)</label>
+                        <textarea class="form-control" id="mensajeEmail" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="btnEnviarPresupuesto">Enviar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Constantes
+        const ANCHO_HOJA = 58; // cm
+        const ALTO_HOJA = 88; // cm
+        const COLORES_PREDEFINIDOS = [
+            '#4361ee', '#3a0ca3', '#7209b7', '#f72585', '#4cc9f0',
+            '#ff9e00', '#ff6d00', '#ff4800', '#009688', '#00bcd4'
+        ];
+
+        // Variables globales
+        let contadorDisenos = 1;
+        let resultadosCalculados = null;
+        let configuracionesGuardadas = JSON.parse(localStorage.getItem('realprint_configuraciones') || '[]');
+
+        // Elementos DOM
+        const disenosContainer = document.getElementById('disenosContainer');
+        const btnAnadirDiseno = document.getElementById('btnAnadirDiseno');
+        const calculadoraForm = document.getElementById('calculadoraForm');
+        const canvas = document.getElementById('visualizacion');
+        const ctx = canvas.getContext('2d');
+        const sinResultados = document.getElementById('sinResultados');
+        const conResultados = document.getElementById('conResultados');
+        const resultadosTabla = document.getElementById('resultadosTabla');
+        const leyendaVisualizacion = document.getElementById('leyendaVisualizacion');
+        const configuracionesGuardadasList = document.getElementById('configuracionesGuardadas');
+        
+        // Elementos para modales
+        const btnExportarPDF = document.getElementById('btnExportarPDF');
+        const btnEnviarEmail = document.getElementById('btnEnviarEmail');
+        const exportarPDFModal = new bootstrap.Modal(document.getElementById('exportarPDFModal'));
+        const enviarEmailModal = new bootstrap.Modal(document.getElementById('enviarEmailModal'));
+
+        // Inicialización
+        inicializarCanvas();
+        actualizarListaConfiguraciones();
+
+        // Event Listeners
+        btnAnadirDiseno.addEventListener('click', anadirNuevoDiseno);
+        calculadoraForm.addEventListener('submit', calcularDistribucion);
+        document.getElementById('btnGuardarConfiguracion').addEventListener('click', guardarConfiguracion);
+        btnExportarPDF.addEventListener('click', () => exportarPDFModal.show());
+        btnEnviarEmail.addEventListener('click', () => enviarEmailModal.show());
+        document.getElementById('btnGenerarPDF').addEventListener('click', generarPDF);
+        document.getElementById('btnEnviarPresupuesto').addEventListener('click', enviarPresupuesto);
+
+        /**
+         * Inicializa el canvas con una representación de la hoja
+         */
+        function inicializarCanvas() {
+            // Factor de escala para dibujar en el canvas (cm a px)
+            const escala = 10;
+            canvas.width = ANCHO_HOJA * escala;
+            canvas.height = ALTO_HOJA * escala;
+            
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.strokeStyle = '#000000';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(0, 0, canvas.width, canvas.height);
+            
+            // Texto central indicando el tamaño de la hoja
+            ctx.fillStyle = '#cccccc';
+            ctx.font = 'bold 24px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText(`${ANCHO_HOJA}cm x ${ALTO_HOJA}cm`, canvas.width / 2, canvas.height / 2);
+        }
+
+        /**
+         * Añade un nuevo diseño al formulario
+         */
+        function anadirNuevoDiseno() {
+            contadorDisenos++;
+            
+            const nuevoDiseno = document.createElement('div');
+            nuevoDiseno.className = 'design-row';
+            nuevoDiseno.dataset.index = contadorDisenos - 1;
+            
+            const colorIndex = (contadorDisenos - 1) % COLORES_PREDEFINIDOS.length;
+            const colorPredefinido = COLORES_PREDEFINIDOS[colorIndex];
+            
+            nuevoDiseno.innerHTML = `
+                <div class="row mb-2">
+                    <div class="col-md-9">
+                        <label class="form-label">Diseño #${contadorDisenos}</label>
+                    </div>
+                    <div class="col-md-3 text-end">
+                        <button type="button" class="btn btn-sm btn-outline-danger btn-eliminar-diseno">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="row g-2 mb-2">
+                    <div class="col-md-6">
+                        <label class="form-label">Nombre</label>
+                        <input type="text" class="form-control nombre-diseno" placeholder="Ej: Logo">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Color</label>
+                        <input type="color" class="form-control color-diseno" value="${colorPredefinido}">
+                    </div>
+                </div>
+                <div class="row g-2">
+                    <div class="col-md-4">
+                        <label class="form-label">Ancho (cm)</label>
+                        <input type="number" step="0.1" min="0.1" class="form-control ancho-diseno" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Alto (cm)</label>
+                        <input type="number" step="0.1" min="0.1" class="form-control alto-diseno" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Cantidad</label>
+                        <input type="number" min="1" class="form-control cantidad-diseno" value="1" required>
+                    </div>
+                </div>
+            `;
+            
+            disenosContainer.appendChild(nuevoDiseno);
+            
+            // Agregar evento para eliminar este diseño
+            const btnEliminar = nuevoDiseno.querySelector('.btn-eliminar-diseno');
+            btnEliminar.addEventListener('click', function() {
+                disenosContainer.removeChild(nuevoDiseno);
+                // Habilitar/deshabilitar botones según la cantidad de diseños
+                actualizarBotonesEliminar();
+            });
+            
+            // Habilitar/deshabilitar botones según la cantidad de diseños
+            actualizarBotonesEliminar();
+        }
+
+        /**
+         * Actualiza el estado de los botones de eliminar diseño
+         */
+        function actualizarBotonesEliminar() {
+            const btnsEliminar = document.querySelectorAll('.btn-eliminar-diseno');
+            
+            // Si solo hay un diseño, deshabilitamos su botón de eliminar
+            if (btnsEliminar.length === 1) {
+                btnsEliminar[0].disabled = true;
+            } else {
+                // Habilitamos todos los botones
+                btnsEliminar.forEach(btn => btn.disabled = false);
+            }
+        }
+
+        /**
+         * Recopila los datos de los diseños del formulario
+         */
+        function obtenerDisenosDelFormulario() {
+            const disenos = [];
+            const filas = disenosContainer.querySelectorAll('.design-row');
+            
+            filas.forEach(fila => {
+                const nombre = fila.querySelector('.nombre-diseno').value || `Diseño #${parseInt(fila.dataset.index) + 1}`;
+                const color = fila.querySelector('.color-diseno').value;
+                const ancho = parseFloat(fila.querySelector('.ancho-diseno').value);
+                const alto = parseFloat(fila.querySelector('.alto-diseno').value);
+                const cantidad = parseInt(fila.querySelector('.cantidad-diseno').value);
+                
+                if (!isNaN(ancho) && !isNaN(alto) && !isNaN(cantidad) && ancho > 0 && alto > 0 && cantidad > 0) {
+                    disenos.push({
+                        nombre,
+                        color,
+                        ancho,
+                        alto,
+                        cantidad
+                    });
+                }
+            });
+            
+            return disenos;
+        }
+
+        /**
+         * Calcula la distribución óptima de los diseños en la hoja
+         */
+        function calcularDistribucion(event) {
+            event.preventDefault();
+            
+            const disenos = obtenerDisenosDelFormulario();
+            if (disenos.length === 0) {
+                alert('Por favor, introduce al menos un diseño con dimensiones válidas.');
+                return;
+            }
+            
+            const margen = parseFloat(document.getElementById('margenDisenos').value);
+            const forzarOrientacion = document.getElementById('forzarOrientacion').value;
+            const tipoMaterial = document.getElementById('tipoMaterial');
+            const precioHoja = parseFloat(tipoMaterial.options[tipoMaterial.selectedIndex].dataset.precio);
+            const nombreMaterial = tipoMaterial.options[tipoMaterial.selectedIndex].text;
+            
+            // Calcular distribución para cada diseño
+            const resultados = [];
+            let totalHojas = 0;
+            
+            disenos.forEach(diseno => {
+                // Calcular cuántos diseños caben en la hoja con el margen aplicado
+                const anchoDisenoConMargen = diseno.ancho + (margen * 2);
+                const altoDisenoConMargen = diseno.alto + (margen * 2);
+                
+                // Distribución sin rotar el diseño
+                const horizontalSinRotar = Math.floor(ANCHO_HOJA / anchoDisenoConMargen);
+                const verticalSinRotar = Math.floor(ALTO_HOJA / altoDisenoConMargen);
+                const totalSinRotar = horizontalSinRotar * verticalSinRotar;
+                
+                // Distribución rotando el diseño 90 grados
+                const horizontalRotado = Math.floor(ANCHO_HOJA / altoDisenoConMargen);
+                const verticalRotado = Math.floor(ALTO_HOJA / anchoDisenoConMargen);
+                const totalRotado = horizontalRotado * verticalRotado;
+                
+                // Determinar la mejor distribución según la opción seleccionada
+                let distribucionOptima;
+                let distribucionRotada = false;
+                
+                if (forzarOrientacion === 'original') {
+                    distribucionOptima = {
+                        horizontal: horizontalSinRotar,
+                        vertical: verticalSinRotar,
+                        total: totalSinRotar
+                    };
+                } else if (forzarOrientacion === 'rotado') {
+                    distribucionOptima = {
+                        horizontal: horizontalRotado,
+                        vertical: verticalRotado,
+                        total: totalRotado
+                    };
+                    distribucionRotada = true;
+                } else { // automático
+                    if (totalRotado > totalSinRotar) {
+                        distribucionOptima = {
+                            horizontal: horizontalRotado,
+                            vertical: verticalRotado,
+                            total: totalRotado
+                        };
+                        distribucionRotada = true;
+                    } else {
+                        distribucionOptima = {
+                            horizontal: horizontalSinRotar,
+                            vertical: verticalSinRotar,
+                            total: totalSinRotar
+                        };
+                    }
+                }
+                
+                // Calcular hojas necesarias
+                const hojasNecesarias = Math.ceil(diseno.cantidad / distribucionOptima.total);
+                totalHojas += hojasNecesarias;
+                
+                // Calcular desperdicio
+                const areaHoja = ANCHO_HOJA * ALTO_HOJA;
+                const areaDisenoTotal = distribucionOptima.total * (diseno.ancho * diseno.alto);
+                const desperdicio = 100 - (areaDisenoTotal / areaHoja * 100);
+                
+                // Guardar resultado
+                resultados.push({
+                    diseno,
+                    distribucion: distribucionOptima,
+                    rotado: distribucionRotada,
+                    hojasNecesarias,
+                    desperdicioPorcentaje: desperdicio.toFixed(2)
+                });
+            });
+            
+            // Guardar los resultados para usarlos en visualización y exportación
+            resultadosCalculados = {
+                disenos,
+                resultados,
+                totalHojas,
+                costoTotal: totalHojas * precioHoja,
+                precioHoja,
+                margen,
+                nombreMaterial
+            };
+            
+            // Mostrar resultados
+            mostrarResultados(resultadosCalculados);
+            // Visualizar la distribución
+            visualizarDistribucion(resultadosCalculados);
+        }
+
+        /**
+         * Muestra los resultados de la distribución en la tabla
+         */
+        function mostrarResultados(datos) {
+            // Mostrar sección de resultados
+            sinResultados.style.display = 'none';
+            conResultados.style.display = 'block';
+            
+            // Limpiar tabla de resultados
+            resultadosTabla.innerHTML = '';
+            
+            // Agregar cada diseño a la tabla
+            datos.resultados.forEach(resultado => {
+                const fila = document.createElement('tr');
+                
+                const colorCelda = document.createElement('div');
+                colorCelda.className = 'legend-item';
+                colorCelda.style.backgroundColor = resultado.diseno.color;
+                
+                fila.innerHTML = `
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <div class="legend-item me-2" style="background-color: ${resultado.diseno.color}"></div>
+                            ${resultado.diseno.nombre}
+                        </div>
+                    </td>
+                    <td>${resultado.diseno.ancho} x ${resultado.diseno.alto} cm</td>
+                    <td>
+                        ${resultado.distribucion.horizontal} x ${resultado.distribucion.vertical}
+                        ${resultado.rotado ? ' <span class="badge bg-info">Rotado</span>' : ''}
+                    </td>
+                    <td>${resultado.diseno.cantidad}</td>
+                    <td>${resultado.hojasNecesarias}</td>
+                `;
+                
+                resultadosTabla.appendChild(fila);
+            });
+            
+            // Actualizar información adicional
+            document.getElementById('resultadoMargen').textContent = datos.margen;
+            document.getElementById('resultadoMaterial').textContent = datos.nombreMaterial;
+            document.getElementById('totalHojas').textContent = datos.totalHojas;
+            document.getElementById('precioPorHoja').textContent = datos.precioHoja;
+            document.getElementById('costoTotal').textContent = `${datos.costoTotal.toFixed(2)}€`;
+        }
+
+        /**
+         * Visualiza la distribución de los diseños en el canvas
+         */
+        function visualizarDistribucion(datos) {
+            // Limpiar canvas
+            inicializarCanvas();
+            
+            // Factor de escala (cm a px)
+            const escala = 10;
+            
+            // Limpiar leyenda
+            leyendaVisualizacion.innerHTML = '<h6>Leyenda:</h6>';
+            
+            // Mostrar cada diseño
+            const primer

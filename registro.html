@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RealPrint - Registro</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" type="image/png" href="img/RealPrint logo.png">
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .register-container {
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .register-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .register-header h1 {
+            color: #0d6efd;
+        }
+        .pac-container {
+            z-index: 1050 !important;
+        }
+        .password-strength {
+            height: 5px;
+            margin-top: 5px;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+        .strength-weak { background-color: #dc3545; width: 25%; }
+        .strength-medium { background-color: #ffc107; width: 50%; }
+        .strength-good { background-color: #28a745; width: 75%; }
+        .strength-strong { background-color: #20c997; width: 100%; }
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: #555;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+        .password-requirements {
+            font-size: 0.8rem;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+        .requirement {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2px;
+        }
+        .requirement i {
+            margin-right: 5px;
+        }
+        .requirement.valid {
+            color: #28a745;
+        }
+        .requirement.invalid {
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <img src="img/RealPrint logo.png" alt="RealPrint Logo" height="25">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Inicio</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Servicios</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="servicios.html">Todos los Servicios</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="serigrafia.html">Serigrafía</a></li>
+                            <li><a class="dropdown-item" href="rotulacion.html">Rotulación</a></li>
+                            <li><a class="dropdown-item" href="dtf.html">DTF</a></li>
+                            <li><a class="dropdown-item" href="sublimacion.html">Sublimación</a></li>
+                            <li><a class="dropdown-item" href="impresion-digital.html">Impresión Digital</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="sobreNosotros.html">Sobre Nosotros</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contacto.html">Contacto</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="faq.html">FAQ</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="termycond.html">Términos y Condiciones</a>
+                    </li>
+                </ul>
+                <div class="d-flex">
+                    <a href="login.html" class="btn btn-outline-light me-2">Iniciar Sesión</a>
+                    <a href="registro.html" class="btn btn-light">Registrarse</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card shadow">
+                    <div class="card-body p-5">
+                        <h2 class="text-center mb-4">Crear Cuenta</h2>
+                        <form id="registerForm">
+                            <div class="mb-3">
+                                <label for="nombre" class="form-label">Nombre</label>
+                                <input type="text" class="form-control" id="nombre" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="apellidos" class="form-label">Apellidos</label>
+                                <input type="text" class="form-control" id="apellidos" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Correo Electrónico</label>
+                                <input type="email" class="form-control" id="email" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Contraseña</label>
+                                <input type="password" class="form-control" id="password" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="confirmPassword" class="form-label">Confirmar Contraseña</label>
+                                <input type="password" class="form-control" id="confirmPassword" required>
+                            </div>
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" class="form-check-input" id="terms" required>
+                                <label class="form-check-label" for="terms">Acepto los <a href="termycond.html">Términos y Condiciones</a></label>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">Registrarse</button>
+                        </form>
+                        <div class="text-center mt-3">
+                            <p>¿Ya tienes una cuenta? <a href="login.html" class="text-decoration-none">Inicia Sesión</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="loading-overlay" style="display: none;">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Cargando...</span>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-light py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5>RealPrint</h5>
+                    <p>Tu socio en impresión y serigrafía de calidad.</p>
+                    <div class="social-icons">
+                        <a href="#" class="text-light me-2"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-light me-2"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-light me-2"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-light"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <h5>Enlaces Rápidos</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="servicios.html" class="text-light">Servicios</a></li>
+                        <li><a href="sobreNosotros.html" class="text-light">Sobre Nosotros</a></li>
+                        <li><a href="contacto.html" class="text-light">Contacto</a></li>
+                        <li><a href="faq.html" class="text-light">FAQ</a></li>
+                        <li><a href="termycond.html" class="text-light">Términos y Condiciones</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5>Contacto</h5>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-map-marker-alt me-2"></i> Dirección: Calle Ejemplo, 123</li>
+                        <li><i class="fas fa-phone me-2"></i> Teléfono: +34 123 456 789</li>
+                        <li><i class="fas fa-envelope me-2"></i> Email: info@realprint.com</li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="mb-0">&copy; 2024 RealPrint. Todos los derechos reservados.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <a href="privacidad.html" class="text-light me-3">Política de Privacidad</a>
+                    <a href="cookies.html" class="text-light">Política de Cookies</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module">
+        import { validators, errorMessages, showError, clearError, showLoading, hideLoading, showNotification, handleApiError } from './src/utils/utils.js';
+        import config from './js/config.js';
+        import { logger } from './js/logger.js';
+        import { getEnv } from './js/env.js';
+        import { generateCsrfToken, verifyCsrfToken, verifyRecaptcha, checkPasswordStrength, sanitizeString } from './js/security.js';
+
+        // Inicializar el autocompletado de direcciones
+        async function initAutocomplete() {
+            try {
+                const googleMapsApiKey = await getEnv('GOOGLE_MAPS_API_KEY');
+                if (!googleMapsApiKey) {
+                    throw new Error('No se encontró la API Key de Google Maps');
+                }
+
+                // Cargar la API de Google Maps dinámicamente
+                const script = document.createElement('script');
+                script.src = `https://maps.googleapis.com/maps/api/js?key=${googleMapsApiKey}&libraries=places`;
+                script.async = true;
+                script.defer = true;
+                document.head.appendChild(script);
+
+                script.onload = () => {
+                    const input = document.getElementById('direccion');
+                    const autocomplete = new google.maps.places.Autocomplete(input, {
+                        componentRestrictions: { country: 'es' },
+                        fields: ['formatted_address', 'geometry', 'name'],
+                        types: ['address']
+                    });
+
+                    autocomplete.addListener('place_changed', function() {
+                        const place = autocomplete.getPlace();
+                        if (!place.geometry) {
+                            showError(input, 'Por favor, selecciona una dirección válida');
+                            return;
+                        }
+
+                        clearError(input);
+                        document.getElementById('latitud').value = place.geometry.location.lat();
+                        document.getElementById('longitud').value = place.geometry.location.lng();
+                    });
+                };
+            } catch (error) {
+                logger.error('Error al inicializar Google Maps', error);
+                showNotification('Error al cargar el servicio de mapas. Por favor, intenta más tarde.', 'danger');
+            }
+        }
+
+        // Inicializar reCAPTCHA
+        async function initRecaptcha() {
+            try {
+                const recaptchaSiteKey = await getEnv('RECAPTCHA_SITE_KEY');
+                if (!recaptchaSiteKey) {
+                    throw new Error('No se encontró la clave de reCAPTCHA');
+                }
+
+                const recaptchaDiv = document.getElementById('recaptcha');
+                recaptchaDiv.setAttribute('data-sitekey', recaptchaSiteKey);
+            } catch (error) {
+                logger.error('Error al inicializar reCAPTCHA', error);
+                showNotification('Error al cargar el servicio de verificación. Por favor, intenta más tarde.', 'danger');
+            }
+        }
+
+        // Función para actualizar los requisitos de la contraseña
+        function updatePasswordRequirements(password) {
+            const strength = checkPasswordStrength(password);
+            
+            // Actualizar iconos y clases
+            document.getElementById('length-req').className = `requirement ${strength.length ? 'valid' : 'invalid'}`;
+            document.getElementById('upper-req').className = `requirement ${strength.upperCase ? 'valid' : 'invalid'}`;
+            document.getElementById('lower-req').className = `requirement ${strength.lowerCase ? 'valid' : 'invalid'}`;
+            document.getElementById('number-req').className = `requirement ${strength.numbers ? 'valid' : 'invalid'}`;
+            document.getElementById('special-req').className = `requirement ${strength.specialChar ? 'valid' : 'invalid'}`;
+            
+            // Actualizar iconos
+            const requirements = document.querySelectorAll('.requirement');
+            requirements.forEach(req => {
+                const icon = req.querySelector('i');
+                icon.className = req.classList.contains('valid') ? 'bi bi-check-circle' : 'bi bi-x-circle';
+            });
+            
+            // Actualizar barra de fortaleza
+            const strengthBar = document.querySelector('.password-strength');
+            strengthBar.className = 'password-strength';
+            if (strength.score <= 1) {
+                strengthBar.classList.add('strength-weak');
+            } else if (strength.score === 2) {
+                strengthBar.classList.add('strength-medium');
+            } else if (strength.score === 3) {
+                strengthBar.classList.add('strength-good');
+            } else {
+                strengthBar.classList.add('strength-strong');
+            }
+            
+            return strength.meetsRequirements;
+        }
+
+        // Validación en tiempo real
+        document.getElementById('password').addEventListener('input', function(e) {
+            updatePasswordRequirements(e.target.value);
+        });
+
+        // Generar token CSRF al cargar la página
+        document.addEventListener('DOMContentLoaded', async function() {
+            try {
+                const csrfToken = await generateCsrfToken();
+                document.getElementById('csrfToken').value = csrfToken;
+                
+                await Promise.all([
+                    initAutocomplete(),
+                    initRecaptcha()
+                ]);
+            } catch (error) {
+                logger.error('Error al inicializar la página', error);
+                showNotification('Error al inicializar la página. Por favor, intenta más tarde.', 'danger');
+            }
+        });
+
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const form = e.target;
+            let isValid = true;
+            
+            // Validar nombre
+            const nombre = document.getElementById('nombre');
+            if (!nombre.value.trim()) {
+                showError(nombre, errorMessages.required);
+                isValid = false;
+            } else {
+                clearError(nombre);
+            }
+            
+            // Validar email
+            const email = document.getElementById('email');
+            if (!validators.email(email.value)) {
+                showError(email, errorMessages.email);
+                isValid = false;
+            } else {
+                clearError(email);
+            }
+            
+            // Validar contraseña
+            const password = document.getElementById('password');
+            const passwordValid = updatePasswordRequirements(password.value);
+            if (!passwordValid) {
+                showError(password, errorMessages.password);
+                isValid = false;
+            } else {
+                clearError(password);
+            }
+            
+            // Validar confirmación de contraseña
+            const confirmPassword = document.getElementById('confirmPassword');
+            if (password.value !== confirmPassword.value) {
+                showError(confirmPassword, errorMessages.passwordsMatch);
+                isValid = false;
+            } else {
+                clearError(confirmPassword);
+            }
+            
+            // Validar términos y condiciones
+            const terminos = document.getElementById('terms');
+            if (!terminos.checked) {
+                showError(terminos, 'Debes aceptar los términos y condiciones');
+                isValid = false;
+            } else {
+                clearError(terminos);
+            }
+
+            // Validar reCAPTCHA
+            const recaptchaResponse = grecaptcha.getResponse();
+            if (!recaptchaResponse) {
+                showError(document.querySelector('.g-recaptcha'), 'Por favor, completa el reCAPTCHA');
+                isValid = false;
+            } else {
+                clearError(document.querySelector('.g-recaptcha'));
+            }
+            
+            if (!isValid) return;
+
+            const submitButton = document.querySelector('button[type="submit"]');
+            const loadingOverlay = document.querySelector('.loading-overlay');
+            
+            try {
+                showLoading(submitButton);
+                loadingOverlay.style.display = 'flex';
+                
+                // Verificar reCAPTCHA
+                const recaptchaValid = await verifyRecaptcha(recaptchaResponse);
+                if (!recaptchaValid) {
+                    throw new Error('Verificación reCAPTCHA fallida');
+                }
+                
+                // Verificar token CSRF
+                const csrfToken = document.getElementById('csrfToken').value;
+                const csrfValid = await verifyCsrfToken(csrfToken);
+                if (!csrfValid) {
+                    throw new Error('Token CSRF inválido');
+                }
+                
+                const formData = {
+                    nombre: sanitizeString(nombre.value),
+                    email: sanitizeString(email.value),
+                    password: password.value,
+                    csrfToken: csrfToken
+                };
+                
+                const response = await fetch(`${config.apiBaseUrl}/auth/register`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    logger.info('Registro exitoso', { email: formData.email });
+                    showNotification('Registro exitoso. Por favor, verifica tu email para activar tu cuenta.', 'success');
+                    setTimeout(() => {
+                        window.location.href = 'login.html';
+                    }, 3000);
+                } else {
+                    logger.error('Error en el registro', data);
+                    showNotification(data.message || 'Error en el registro', 'danger');
+                }
+            } catch (error) {
+                logger.error('Error en el registro', error);
+                handleApiError(error);
+            } finally {
+                hideLoading(submitButton);
+                loadingOverlay.style.display = 'none';
+                grecaptcha.reset();
+            }
+        });
+    </script>
+</body>
+</html> 

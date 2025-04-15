@@ -1,0 +1,300 @@
+/* Estilos generales */
+:root {
+    --primary-color: #007bff;
+    --secondary-color: #6c757d;
+    --success-color: #28a745;
+    --danger-color: #dc3545;
+    --warning-color: #ffc107;
+    --info-color: #17a2b8;
+    --light-color: #f8f9fa;
+    --dark-color: #343a40;
+}
+
+body {
+    font-family: 'Outfit', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--light-color);
+}
+
+/* Navbar */
+.navbar {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.navbar-brand img {
+    height: 40px;
+}
+
+.nav-link {
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+    color: var(--primary-color) !important;
+}
+
+/* Carrusel */
+.carousel-item {
+    height: 500px;
+}
+
+.carousel-item img {
+    object-fit: cover;
+    height: 100%;
+}
+
+.carousel-caption {
+    background: rgba(0,0,0,0.5);
+    padding: 20px;
+    border-radius: 10px;
+}
+
+/* Iconos de inicio */
+.iconosInicio {
+    padding: 30px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.iconosInicio:hover {
+    transform: translateY(-5px);
+}
+
+.iconosInicio i {
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    margin-bottom: 15px;
+}
+
+/* Dashboard */
+.card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card-header {
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 10px 10px 0 0 !important;
+}
+
+/* Tablas */
+.table {
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.table thead th {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+}
+
+/* Formularios */
+.form-control {
+    border-radius: 5px;
+    border: 1px solid #ced4da;
+}
+
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+}
+
+/* Botones */
+.btn {
+    border-radius: 5px;
+    padding: 8px 20px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+/* Footer */
+footer {
+    background-color: var(--dark-color);
+    color: white;
+    padding: 20px 0;
+    margin-top: 50px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .carousel-item {
+        height: 300px;
+    }
+    
+    .iconosInicio {
+        margin-bottom: 20px;
+    }
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-out;
+}
+
+.Outfit-Medium {
+             font-family: "Outfit", serif;
+             font-optical-sizing: auto;
+             font-weight: normal;
+             font-style: normal;
+         }
+
+.cuerpo {
+    font-family: "Outfit", serif;
+}
+
+.navbar-nav .nav-item {
+    margin-right: 20px; /* Ajusta este valor según lo que necesites */
+
+}
+
+.navbar-nav {
+    margin: 0 auto; /* Coloca márgenes automáticos */
+    display: flex;
+    justify-content: center; /* Asegura que el contenido esté centrado horizontalmente */
+    align-items: center;    /* Opcional: centra el texto verticalmente */
+}
+
+/* Estilo para las imágenes del carrusel */
+.carousel-inner img {
+    width: 100%;            /* Asegura que las imágenes se expandan horizontalmente */
+    height: 500px;          /* Define una altura fija para todas las imágenes */
+    object-fit: cover;      /* Escalar la imagen (recortando si es necesario) sin distorsión */
+    object-position: center; /* Mantiene el centro de la imagen visible */
+    border-radius: 10px;    /* (Opcional) Bordes redondeados para un mejor diseño */
+}
+
+/* Ajusta para pantallas más pequeñas */
+@media (max-width: 768px) {
+    .carousel-inner img {
+        height: 300px; /* Reducir altura para dispositivos móviles */
+    }
+}
+
+.iconosInicio h4 {
+    margin-top: 1rem; /* Espacio entre el icono y el título */
+    font-size: 1.5rem; /* Tamaño del título */
+    color: #333; /* Color del título */
+}
+
+.iconosInicio span {
+    margin-top: 0.5rem; /* Espacio entre el título y el texto */
+    font-size: 1rem; /* Tamaño del texto */
+    color: #666; /* Color del texto */
+}
+
+.encabezadoTabla {
+    color: white;
+    background-color: #0e3298;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.filaTabla {
+    color: white;
+    background-color: #ac8a13;
+    text-align: center;
+    border: whitesmoke inset;
+}
+
+h1 {
+    text-align: center;
+    text-transform: uppercase;
+    text-decoration-style: dashed;
+}
+
+.card img {
+    height: 370px; /* Ajusta este valor según la altura que desees */
+    object-fit: cover; /* Asegura que la imagen encaje estéticamente dentro del espacio */
+    width: 100%; /* Ocupa todo el ancho del contenedor */
+}
+
+.enlaceCabecera {
+    color: #ffffff;
+    background: -webkit-linear-gradient(#72b1fc, #030339);
+    padding: 5px;
+    border-radius: 10px;
+    text-align: center;
+    text-decoration: none;
+    font-weight: bold;
+    text-transform: uppercase;
+    display: block; /* Asegura que el enlace se comporte como un bloque */
+    /* Centra el bloque horizontalmente */
+    margin: 20px auto 0;
+    width: fit-content; /* Ajusta el ancho al contenido */
+}
+
+.imagenMapa {
+    width: 180px;
+    height: 180px;
+    transition-property: width;
+    transition-duration: 2s;
+    transition-delay: 1s;
+}
+
+.imagenMapa:hover {
+    width: 350px;
+}
+
+.textoTitulo {
+    color: #181818;
+    font-weight: normal;
+    font-size: 20px;
+    text-align: center;
+    text-transform: uppercase;
+    text-decoration-style: dashed;
+    margin-top: 10px;
+}
+
+.textoTituloSecundario {
+    color: #5a5a5a;
+    font-weight: normal;
+    font-size: 20px;
+    text-align: center;
+    text-transform: capitalize;
+    margin-top: 10px;
+
+}
+
+.textoContenido {
+    color: #363636;
+    font-weight: lighter;
+    font-size: 18px;
+    text-align: justify;
+    text-transform: none;
+    margin-top: 20px;
+}
