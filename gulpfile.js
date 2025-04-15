@@ -3,23 +3,43 @@ const cleanCSS = require('gulp-clean-css');
 const uglify = require('gulp-uglify');
 const imagemin = require('gulp-imagemin');
 
+// Configuración de rutas
+const config = {
+  src: {
+    css: 'css/*.css',
+    js: 'js/*.js',
+    images: 'img/*.{jpg,jpeg,png,gif,svg}',
+    html: '*.html',
+    fonts: 'fonts/*'
+  },
+  dest: 'dist'
+};
+
 // Tarea para CSS
-function css() {
-  return gulp.src('css/*.css')
+function processCSS() {
+  return gulp.src(config.src.css)
     .pipe(cleanCSS({ compatibility: 'ie8' }))
-    .pipe(gulp.dest('dist/css'));
+    .on('error', function(err) {
+      console.error('CSS Error:', err.message);
+      this.emit('end');
+    })
+    .pipe(gulp.dest(`${config.dest}/css`));
 }
 
-// Tarea para JS
-function js() {
-  return gulp.src('js/*.js')
+// Tarea para JavaScript
+function processJS() {
+  return gulp.src(config.src.js)
     .pipe(uglify())
-    .pipe(gulp.dest('dist/js'));
+    .on('error', function(err) {
+      console.error('JS Error:', err.message);
+      this.emit('end');
+    })
+    .pipe(gulp.dest(`${config.dest}/js`));
 }
 
 // Tarea para imágenes
-function images() {
-  return gulp.src('img/*')
+function processImages() {
+  return gulp.src(config.src.images)
     .pipe(imagemin([
       imagemin.gifsicle({ interlaced: true }),
       imagemin.mozjpeg({ quality: 75, progressive: true }),
@@ -31,23 +51,29 @@ function images() {
         ]
       })
     ]))
-    .pipe(gulp.dest('dist/img'));
+    .pipe(gulp.dest(`${config.dest}/img`));
 }
 
 // Tarea para HTML
-function html() {
-  return gulp.src('*.html')
-    .pipe(gulp.dest('dist'));
+function processHTML() {
+  return gulp.src(config.src.html)
+    .pipe(gulp.dest(config.dest));
 }
 
 // Tarea para fuentes
-function fonts() {
-  return gulp.src('fonts/*')
-    .pipe(gulp.dest('dist/fonts'));
+function processFonts() {
+  return gulp.src(config.src.fonts)
+    .pipe(gulp.dest(`${config.dest}/fonts`));
 }
 
 // Tarea principal
-const build = gulp.parallel(css, js, images, html, fonts);
+const build = gulp.parallel(
+  processCSS,
+  processJS,
+  processImages,
+  processHTML,
+  processFonts
+);
 
 exports.default = build;
 exports.build = build;
