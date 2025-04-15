@@ -3,43 +3,23 @@ const cleanCSS = require('gulp-clean-css');
 const uglify = require('gulp-uglify');
 const imagemin = require('gulp-imagemin');
 
-// Configuración de rutas
-const config = {
-  src: {
-    css: 'css/*.css',
-    js: 'js/*.js',
-    images: 'img/*.{jpg,jpeg,png,gif,svg}',
-    html: '*.html',
-    fonts: 'fonts/*'
-  },
-  dest: 'dist'
-};
-
 // Tarea para CSS
-function processCSS() {
-  return gulp.src(config.src.css)
+function css() {
+  return gulp.src('css/*.css')
     .pipe(cleanCSS({ compatibility: 'ie8' }))
-    .on('error', function(err) {
-      console.error('CSS Error:', err.message);
-      this.emit('end');
-    })
-    .pipe(gulp.dest(`${config.dest}/css`));
+    .pipe(gulp.dest('dist/css'));
 }
 
-// Tarea para JavaScript
-function processJS() {
-  return gulp.src(config.src.js)
+// Tarea para JS
+function js() {
+  return gulp.src('js/*.js')
     .pipe(uglify())
-    .on('error', function(err) {
-      console.error('JS Error:', err.message);
-      this.emit('end');
-    })
-    .pipe(gulp.dest(`${config.dest}/js`));
+    .pipe(gulp.dest('dist/js'));
 }
 
 // Tarea para imágenes
-function processImages() {
-  return gulp.src(config.src.images)
+function images() {
+  return gulp.src('img/*')
     .pipe(imagemin([
       imagemin.gifsicle({ interlaced: true }),
       imagemin.mozjpeg({ quality: 75, progressive: true }),
@@ -51,29 +31,23 @@ function processImages() {
         ]
       })
     ]))
-    .pipe(gulp.dest(`${config.dest}/img`));
+    .pipe(gulp.dest('dist/img'));
 }
 
 // Tarea para HTML
-function processHTML() {
-  return gulp.src(config.src.html)
-    .pipe(gulp.dest(config.dest));
+function html() {
+  return gulp.src('*.html')
+    .pipe(gulp.dest('dist'));
 }
 
 // Tarea para fuentes
-function processFonts() {
-  return gulp.src(config.src.fonts)
-    .pipe(gulp.dest(`${config.dest}/fonts`));
+function fonts() {
+  return gulp.src('fonts/*')
+    .pipe(gulp.dest('dist/fonts'));
 }
 
 // Tarea principal
-const build = gulp.parallel(
-  processCSS,
-  processJS,
-  processImages,
-  processHTML,
-  processFonts
-);
+const build = gulp.parallel(css, js, images, html, fonts);
 
 exports.default = build;
 exports.build = build;
