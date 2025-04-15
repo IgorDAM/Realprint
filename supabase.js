@@ -9,78 +9,34 @@ const supabase = supabaseJs.createClient(supabaseUrl, supabaseKey);
 
 // Funciones auxiliares para operaciones comunes con la base de datos
 
-// Obtener todos los registros de una tabla
-async function getAllRecords(tableName) {
-  const { data, error } = await supabase
-    .from(tableName)
-    .select('*');
-    
-  if (error) {
-    console.error(`Error al obtener registros de ${tableName}:`, error);
-    return null;
-  }
-  
-  return data;
+// Funciones de autenticación
+async function signUp(email, password) {
+    return await supabase.auth.signUp({
+        email,
+        password,
+    });
 }
 
-// Obtener un registro por ID
-async function getRecordById(tableName, id) {
-  const { data, error } = await supabase
-    .from(tableName)
-    .select('*')
-    .eq('id', id)
-    .single();
-    
-  if (error) {
-    console.error(`Error al obtener registro #${id} de ${tableName}:`, error);
-    return null;
-  }
-  
-  return data;
+async function signIn(email, password) {
+    return await supabase.auth.signInWithPassword({
+        email,
+        password,
+    });
 }
 
-// Insertar un nuevo registro
-async function insertRecord(tableName, record) {
-  const { data, error } = await supabase
-    .from(tableName)
-    .insert([record])
-    .select();
-    
-  if (error) {
-    console.error(`Error al insertar en ${tableName}:`, error);
-    return { success: false, error };
-  }
-  
-  return { success: true, data };
+async function signOut() {
+    return await supabase.auth.signOut();
 }
 
-// Actualizar un registro existente
-async function updateRecord(tableName, id, updates) {
-  const { data, error } = await supabase
-    .from(tableName)
-    .update(updates)
-    .eq('id', id)
-    .select();
-    
-  if (error) {
-    console.error(`Error al actualizar registro #${id} en ${tableName}:`, error);
-    return { success: false, error };
-  }
-  
-  return { success: true, data };
+async function getCurrentUser() {
+    return await supabase.auth.getUser();
 }
 
-// Eliminar un registro
-async function deleteRecord(tableName, id) {
-  const { error } = await supabase
-    .from(tableName)
-    .delete()
-    .eq('id', id);
-    
-  if (error) {
-    console.error(`Error al eliminar registro #${id} de ${tableName}:`, error);
-    return { success: false, error };
-  }
-  
-  return { success: true };
+// Función para redirigir al usuario si no está autenticado
+async function checkAuth(redirectUrl = 'index.html') {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+        window.location.href = redirectUrl;
+    }
+    return user;
 }
